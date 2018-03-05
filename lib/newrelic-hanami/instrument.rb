@@ -14,6 +14,7 @@ module NewRelic
 
         def finish
           perform_action_with_newrelic_trace(_trace_options) do
+            ::NewRelic::Agent.add_custom_attributes({ request_path: request.path })
             super
           end
         end
@@ -26,7 +27,7 @@ module NewRelic
             category:   :controller,
             class_name: trace_class_name,
             name:       trace_method_name,
-            request:    self,
+            request:    request,
             params:     params.to_h
           }
         end
